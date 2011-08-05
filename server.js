@@ -25,8 +25,14 @@ app.configure('production', function(){
   
 });
 
-
-var feed_url = 'http://xkcd.com/rss.xml';
+var comics = {
+	xkcd: {
+		url:'http://xkcd.com/rss.xml'
+	},
+	smbc: {
+		url:'http://feeds.feedburner.com/smbc-comics/PvLb'
+	}
+}
 
 //var response = rss.parseURL(feed_url, function(articles) {
 //    console.log(articles.length);
@@ -44,10 +50,21 @@ var feed_url = 'http://xkcd.com/rss.xml';
 
 // Routes
 
-app.get('/photo',function(req,res){
-    rss.parseURL(feed_url, function(articles) {
-        res.send(articles[0].description);
-    });
+app.get('/comic/:name',function(req,res){
+	
+	console.log(req.params.name);
+	
+	if(comics[req.params.name])
+	{
+		rss.parseURL(comics[req.params.name].url, function(articles) {
+	        res.send(articles[0].description);
+	    });
+	}
+	else
+	{
+		res.send('Not found');
+	}
+	
 });
 
 
