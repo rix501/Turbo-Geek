@@ -25,6 +25,8 @@ app.configure('production', function(){
   
 });
 
+//smbc gives error due to strange xml (thanks to feedburner)
+
 var comics = {
 	xkcd: {
 		url:'http://xkcd.com/rss.xml'
