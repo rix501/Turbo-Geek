@@ -57,8 +57,8 @@ app.get('/comic/:name',function(req,res){
 	if(comics[req.params.name])
 	{
 		rss.parseURL(comics[req.params.name].url, function(articles) {
-	        res.send(articles[0].description);
-	    });
+			res.render(articles[0].title + articles[0].description);
+			});
 	}
 	else
 	{
