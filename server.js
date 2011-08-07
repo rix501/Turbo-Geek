@@ -3,7 +3,8 @@
  */
 //npm libraries
 var express = require('express');
-var rss = require("./node-rss");
+
+var rss = require('./rss')
 
 var app = express.createServer();
 
@@ -32,22 +33,9 @@ var comics = {
 		url:'http://xkcd.com/rss.xml'
 	},
 	smbc: {
-		url:'http://feeds.feedburner.com/smbc-comics/PvLb'
+		url:'http://feeds.feedburner.com/smbc-comics/PvLb?fmt=xml'
 	}
 }
-
-//var response = rss.parseURL(feed_url, function(articles) {
-//    console.log(articles.length);
-    //for(i=0; i<articles.length; i++) {
-    //console.log("Article: "+i+", "+
-		 //articles[i].title+"\n"+
-		 //articles[i].link+"\n"+
-		 //articles[i].description+"\n"+
-		 //articles[i].content
-		//);
- //   }
-//});
-
 
 
 // Routes
@@ -59,8 +47,8 @@ app.get('/comic/:name',function(req,res){
 	if(comics[req.params.name])
 	{
 		rss.parseURL(comics[req.params.name].url, function(articles) {
-			res.render(articles[0].title + articles[0].description);
-			});
+			res.send(articles[0].description);
+		});
 	}
 	else
 	{
