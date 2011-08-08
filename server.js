@@ -4,17 +4,17 @@
 //npm libraries
 var express = require('express');
 
-var rss = require('./rss')
+//My libraries
+var rss = require('./rss');
 
 var app = express.createServer();
 
-
 // Express Configuration
 app.configure(function(){
-	app.use(express.bodyParser());
-	app.use(express.methodOverride());
-	app.use(app.router);
-	app.use(express.static(__dirname + '/public'));
+    app.use(express.bodyParser());
+    app.use(express.methodOverride());
+    app.use(app.router);
+    app.use(express.static(__dirname + '/public'));
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
@@ -26,38 +26,27 @@ app.configure('production', function(){
   
 });
 
-//smbc gives error due to strange xml (thanks to feedburner)
-
 var comics = {
-	xkcd: {
-		url:'http://xkcd.com/rss.xml'
-	},
-	smbc: {
-		url:'http://feeds.feedburner.com/smbc-comics/PvLb?fmt=xml'
-	}
-}
-
+    xkcd: {
+        url:'http://xkcd.com/rss.xml'
+    },
+    smbc: {
+        url:'http://feeds.feedburner.com/smbc-comics/PvLb?fmt=xml'
+    }
+};
 
 // Routes
 
 app.get('/comic/:name',function(req,res){
-	
-	console.log(req.params.name);
-	
-	if(comics[req.params.name])
-	{
-		rss.parseURL(comics[req.params.name].url, function(articles) {
-			res.send(articles[0].description);
-		});
-	}
-	else
-	{
-		res.send('Not found');
-	}
-	
+    if(comics[req.params.name]) {
+        rss.parseURL(comics[req.params.name].url, function(articles) {
+            res.send(articles[0].description);
+        });
+    }
+    else {
+        res.send('Not found');
+    }
 });
-
-
 
 app.listen(process.env.C9_PORT || process.env.PORT || 8001);
 console.log("Express server listening on port %d", app.address().port);
