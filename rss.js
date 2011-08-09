@@ -4,8 +4,6 @@ var sax = require("sax"),
   strict = false, // set to false for html-mode
   parser = sax.parser(strict);
 
-
-
 // variable for holding the callback function which is passed to the
 // exported function. This callback is passed the articles array
 var callback = function() {};
@@ -16,11 +14,11 @@ var callback = function() {};
 
 var rssParser = function(body) {
    
-   var articles = [];
-   var current_element = false;
-   var article_count = 0;
-   var in_item = false;
-   var current_chars = '';
+    var articles = [];
+    var current_element = false;
+    var article_count = 0;
+    var in_item = false;
+    var current_chars = '';
    
     function addContent(chars) {
         if(in_item) {
@@ -28,68 +26,67 @@ var rssParser = function(body) {
         }
     }
    
-   
-   parser.onerror = function (e) {
+    parser.onerror = function (e) {
         sys.puts('<ERROR>'+JSON.stringify(e)+"</ERROR>");
-   };
-   
-   parser.ontext = function (t) {
+    };
+    
+    parser.ontext = function (t) {
      // got some text.  t is the string of text.
-      addContent(t);
-   };
-   
-   parser.oncdata = function(){
-      addContent(t);
-   };
-   
-   parser.onopentag = function (node) {
+        addContent(t);
+    };
+    
+    parser.oncdata = function(){
+        addContent(t);
+    };
+    
+    parser.onopentag = function (node) {
      // opened a tag.  node has "name" and "attributes"
         current_element = node.name.toLowerCase();
-      if(current_element == 'item' || current_element == 'entry') {
-         in_item = true;
-         articles[article_count] = [];
-      }
-   };
-   
-   parser.onclosetag = function(name){
+        if(current_element == 'item' || current_element == 'entry') {
+            in_item = true;
+            articles[article_count] = [];
+        }
+    };
+    
+    parser.onclosetag = function(name){
       
-      if(in_item) {
-         switch(current_element) 
-         {
-            case 'description':
-            case 'summary':
-               articles[article_count][current_element] = current_chars.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-            break;
-            case 'content':
-            case 'encoded': // feedburner is <content:encoded>, node-xml reads as <encoded>
-               current_element = 'content';
-               articles[article_count][current_element] = current_chars.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-            break;
-            case 'link':
-            case 'title':
-               articles[article_count][current_element] = current_chars.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-            break;
-         }
-         
-         current_element = false;
-         current_chars = '';
-         if(name.toLowerCase() == 'item' || name.toString() == 'entry') {
-            in_item = false;
-            article_count ++;   
-         }
-      }
-   };
-   
-   parser.onattribute = function (attr) {
+        if(in_item) {
+            switch(current_element) 
+            {
+                case 'description':
+                case 'summary':
+                    articles[article_count][current_element] = current_chars.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+                break;
+                case 'content':
+                case 'encoded': // feedburner is <content:encoded>, node-xml reads as <encoded>
+                    current_element = 'content';
+                    articles[article_count][current_element] = current_chars.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+                break;
+                case 'link':
+                case 'title':
+                    articles[article_count][current_element] = current_chars.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+                break;
+            }
+            
+            current_element = false;
+            current_chars = '';
+            if(name.toLowerCase() == 'item' || name.toString() == 'entry') {
+                in_item = false;
+                article_count ++;   
+            }
+        }
+    };
+    
+    parser.onattribute = function (attr) {
      // an attribute.  attr has "name" and "value"
-   };
-   parser.onend = function () {
+    };
+    parser.onend = function () {
      // parser stream is done, and ready to have more stuff written to it.
-      callback(articles);
-   };
-   
-   //Start
-   parser.write(body).close();
+        callback(articles);
+    };
+    
+    //Start
+    parser.write(body).close();
 };
 
 /**
@@ -97,18 +94,16 @@ var rssParser = function(body) {
  * Parses an RSS feed from a URL. 
  * @param url - URL of the RSS feed file
  * @param cb - callback function to be triggered at end of parsing
- *
- * @TODO - decent error checking
  */
 exports.parseURL = function(url, cb) {
     callback = cb;
 
-   var u = require('url'), http = require('http');
-   var parts = u.parse(url);
-   //sys.puts(JSON.stringify(parts));
-
-   // set the default port to 80
-   if(!parts.port) { parts.port = 80; }
+    var u = require('url'), http = require('http');
+    var parts = u.parse(url);
+    //sys.puts(JSON.stringify(parts));
+    
+    // set the default port to 80
+    if(!parts.port) { parts.port = 80; }
 
     var redirection_level = 0;
     var client = http.createClient(parts.port, parts.hostname);

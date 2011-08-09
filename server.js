@@ -7,6 +7,8 @@ var express = require('express');
 //My libraries
 var rss = require('./rss');
 
+var Models = require('./models');
+
 var app = express.createServer();
 
 // Express Configuration
@@ -26,20 +28,36 @@ app.configure('production', function(){
   
 });
 
-var comics = {
-    xkcd: {
+var comics = new Models.Comics(    
+    [{
+        name: 'xkcd',
         url:'http://xkcd.com/rss.xml'
     },
-    smbc: {
+    {
+        name: 'smbc',
         url:'http://feeds.feedburner.com/smbc-comics/PvLb?fmt=xml'
-    }
-};
+    },
+    {
+        name: 'dinosaur',
+        url:'http://www.rsspect.com/rss/qwantz.xml'
+    }]
+);
 
 // Routes
 
 app.get('/comic/:name',function(req,res){
-    if(comics[req.params.name]) {
-        rss.parseURL(comics[req.params.name].url, function(articles) {
+    
+    var comic = comics.find(function(comic){
+        if(comic.get('name') === req.params.name){
+            return comic;
+        }
+        else {
+            return null;
+        }
+    });
+    
+    if(comic !== null) {
+        rss.parseURL(comic.get('url'), function(articles) {
             res.send(articles[0].description);
         });
     }
