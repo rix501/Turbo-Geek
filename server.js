@@ -57,23 +57,28 @@ var comics = new Models.Comics(
 
 // Routes
 
-app.get('/comic/:name',function(req,res){
+app.get('/comics',function(req,res){
+    var tempHTML = '<ul>'; 
     
+    comics.forEach(function(comic){
+        tempHTML += '<li><a href="/comic/' + comic.get('name') +'">'+ comic.get('name') + '</a></li>';
+    });
+    
+    tempHTML += '</ul>';
+    
+    res.send(tempHTML);
+});
+
+app.get('/comic/:name',function(req,res){
     var comic = comics.find(function(comic){
         if(comic.get('name') === req.params.name){
-            return comic;
-        }
-        else {
-            return null;
+            rss.parseURL(comic.get('url'), function(articles) {
+                res.send(articles[0].description);
+            });
         }
     });
     
-    if(comic !== null) {
-        rss.parseURL(comic.get('url'), function(articles) {
-            res.send(articles[0].description);
-        });
-    }
-    else {
+    if(comic === null) {
         res.send('Not found');
     }
 });
