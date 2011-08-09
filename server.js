@@ -40,6 +40,18 @@ var comics = new Models.Comics(
     {
         name: 'dinosaur',
         url:'http://www.rsspect.com/rss/qwantz.xml'
+    },
+    {
+        name:'lady-sabre',
+        url:'http://feeds.feedburner.com/ineffableaether?format=xml'    
+    },
+    {
+        name:'penny-arcade',
+        url:'http://feeds.penny-arcade.com/pa-mainsite?format=xml'    
+    },
+    {
+        name:'letsbefriendsagain',
+        url:'http://www.letsbefriendsagain.com/feed/'    
     }]
 );
 

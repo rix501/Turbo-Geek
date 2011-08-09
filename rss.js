@@ -35,7 +35,7 @@ var rssParser = function(body) {
         addContent(t);
     };
     
-    parser.oncdata = function(){
+    parser.oncdata = function(t){
         addContent(t);
     };
     
