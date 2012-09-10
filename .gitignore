@@ -1,1 +1,22 @@
+# OS generated files #
+######################
+.DS_Store
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# Node modules that can't be synced to no.de #
+##############################################
+node_modules/
+
+# Project files #
+#################
+*.sublime-project
+*.sublime-workspace
 *.chproj
+*.tmproj
+*.esproj
+
+# Logs #
+########
+*.log

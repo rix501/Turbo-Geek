@@ -13,7 +13,7 @@
  Rob Righter - @robrighter
  http://github.com/robrighter/node-xml
 **********************************************************************/
-var sys = require('sys'), http = require('http');
+var sys = require('util'), http = require('http');
 var xml = require("node-xml");
 
 // variable for holding the callback function which is passed to the

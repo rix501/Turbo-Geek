@@ -1,4 +1,5 @@
-var sys = require('sys'), http = require('http');
+var sys = require('util');
+var http = require('http');
 
 var sax = require("sax"),
   strict = false, // set to false for html-mode
@@ -51,8 +52,7 @@ var rssParser = function(body) {
     parser.onclosetag = function(name){
       
         if(in_item) {
-            switch(current_element) 
-            {
+            switch(current_element) {
                 case 'description':
                 case 'summary':
                     articles[article_count][current_element] = current_chars.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
@@ -72,7 +72,7 @@ var rssParser = function(body) {
             current_chars = '';
             if(name.toLowerCase() == 'item' || name.toString() == 'entry') {
                 in_item = false;
-                article_count ++;   
+                article_count ++;
             }
         }
     };
@@ -91,14 +91,14 @@ var rssParser = function(body) {
 
 /**
  * parseURL()
- * Parses an RSS feed from a URL. 
+ * Parses an RSS feed from a URL.
  * @param url - URL of the RSS feed file
  * @param cb - callback function to be triggered at end of parsing
  */
 exports.parseURL = function(url, cb) {
     callback = cb;
 
-    var u = require('url'), http = require('http');
+    var u = require('url');
     var parts = u.parse(url);
     //sys.puts(JSON.stringify(parts));
     
@@ -106,8 +106,12 @@ exports.parseURL = function(url, cb) {
     if(!parts.port) { parts.port = 80; }
 
     var redirection_level = 0;
-    var client = http.createClient(parts.port, parts.hostname);
-    var request = client.request('GET', parts.pathname, {'host': parts.hostname});
+    var request = http.request({
+        method: 'GET',
+        port: parts.port,
+        host: parts.hostname,
+        path: parts.pathname
+    });
     request.addListener('response', function (response) {
         //sys.puts('STATUS: ' + response.statusCode);
         //sys.puts('HEADERS: ' + JSON.stringify(response.headers));
@@ -116,7 +120,7 @@ exports.parseURL = function(url, cb) {
         switch(response.statusCode) {
             // check for ALL OK
             case 200:
-                var body = ''; 
+                var body = '';
                 response.addListener('data', function (chunk) {
                 body += chunk;
                 });
@@ -143,7 +147,7 @@ exports.parseURL = function(url, cb) {
                 });
                 */
             break;
-        }     
+        }
     });
-    request.end();   
+    request.end();
 };

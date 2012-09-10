@@ -1,15 +1,7 @@
-/** 
- * Module dependencies.
- */
-//npm libraries
 var express = require('express');
-
-//My libraries
-var rss = require('./rss');
-
-var Models = require('./models');
-
-var app = express.createServer();
+var app = express();
+var mysql = require('mysql');
+var _ = require('underscore')._;
 
 // Express Configuration
 app.configure(function(){
@@ -21,67 +13,67 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
 app.configure('production', function(){
   
 });
 
-var comics = new Models.Comics(    
-    [{
-        name: 'xkcd',
-        url:'http://xkcd.com/rss.xml'
-    },
-    {
-        name: 'smbc',
-        url:'http://feeds.feedburner.com/smbc-comics/PvLb?fmt=xml'
-    },
-    {
-        name: 'dinosaur',
-        url:'http://www.rsspect.com/rss/qwantz.xml'
-    },
-    {
-        name:'lady-sabre',
-        url:'http://feeds.feedburner.com/ineffableaether?format=xml'    
-    },
-    {
-        name:'penny-arcade',
-        url:'http://feeds.penny-arcade.com/pa-mainsite?format=xml'    
-    },
-    {
-        name:'letsbefriendsagain',
-        url:'http://www.letsbefriendsagain.com/feed/'    
-    }]
-);
 
-// Routes
-
+//Routes
 app.get('/comics',function(req,res){
-    var tempHTML = '<ul>'; 
-    
-    comics.forEach(function(comic){
-        tempHTML += '<li><a href="/comic/' + comic.get('name') +'">'+ comic.get('name') + '</a></li>';
+    var connection = mysql.createConnection({
+        host     : 'localhost',
+        user     : 'root',
+        password : '',
+        database : 'Turbo'
     });
-    
-    tempHTML += '</ul>';
-    
-    res.send(tempHTML);
+
+    connection.query('CALL GetComics("1")', function(err, rows, fields) {
+        if (err) throw err;
+
+        _.each(rows[0], function(row){
+            if(row.IsMine == '1'){
+                row.IsMine = true;
+            } else if(row.IsMine == '0') {
+                row.IsMine = false;
+            }
+        });
+
+        res.send(rows[0]);
+    });
 });
 
-app.get('/comic/:name',function(req,res){
-    var comic = comics.find(function(comic){
-        if(comic.get('name') === req.params.name){
-            rss.parseURL(comic.get('url'), function(articles) {
-                res.send(articles[0].description);
-            });
-        }
+app.post('/subscribe/:id',function(req,res){
+    var connection = mysql.createConnection({
+        host     : 'localhost',
+        user     : 'root',
+        password : '',
+        database : 'Turbo'
     });
-    
-    if(comic === null) {
-        res.send('Not found');
-    }
+
+    connection.query('CALL Subscribe(1 , ?)', [req.params.id], function(err, rows, fields) {
+        if (err) throw err;
+
+        res.send({msg: 'OK'});
+    });
 });
 
-app.listen(process.env.C9_PORT || process.env.PORT || 8001);
-console.log("Express server listening on port %d", app.address().port);
+app.delete('/subscribe/:id',function(req,res){
+    var connection = mysql.createConnection({
+        host     : 'localhost',
+        user     : 'root',
+        password : '',
+        database : 'Turbo'
+    });
+
+    connection.query('CALL Unsubscribe(1 , ?)', [req.params.id], function(err, rows, fields) {
+        if (err) throw err;
+
+        res.send({msg: 'OK'});
+    });
+});
+
+app.listen(process.env.C9_PORT || process.env.PORT || 5000);
+console.log("Express server listening on port %d", process.env.C9_PORT || process.env.PORT || 5000);
