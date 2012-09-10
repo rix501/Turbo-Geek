@@ -3,7 +3,8 @@ define([
     'views/Comics',
     'jquery',
     'underscore',
-    'backbone'
+    'backbone',
+    'bootstrap'
 ],
 function(PageView, ComicsView) {
     return Backbone.Router.extend({

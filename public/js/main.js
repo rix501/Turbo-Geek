@@ -3,7 +3,8 @@ require.config({
         "jquery": "vendor/jquery.min",
         "underscore": "vendor/underscore.min",
         "backbone": "vendor/backbone.min",
-        "mustache":"vendor/mustache"
+        "mustache":"vendor/mustache",
+        "bootstrap": "vendor/bootstrap.min"
     },
     shim: {
         "underscore": {
@@ -12,7 +13,8 @@ require.config({
         "backbone": {
             deps: ['underscore', 'jquery'],
             exports: 'Backbone'
-        }
+        },
+        "bootstrap" : ['jquery']
     }
 });
 
