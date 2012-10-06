@@ -9,6 +9,10 @@ Thumbs.db
 ##############################################
 node_modules/
 
+# Yeoman #
+##########
+old-public/
+
 # Project files #
 #################
 *.sublime-project

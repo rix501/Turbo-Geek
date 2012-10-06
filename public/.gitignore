@@ -1,0 +1,16 @@
+# Yeoman #
+##########
+
+# Directories #
+###############
+temp/
+test/
+.sass-cache/
+
+# Config #
+##########
+.editorconfig
+.gitattributes
+.jshintrc
+Gruntfile.js
+app/.htaccess
