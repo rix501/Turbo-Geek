@@ -28,5 +28,5 @@ exports.fire = (cb) ->
 
         comics.forEach (comic) ->
             rss.parseComic comic, (parsedComic, articles) ->
-                updatePubDate parsedComic, articles[0].pubdate
+                updatePubDate(parsedComic, articles[0].pubdate) if articles[0]?
                 end()

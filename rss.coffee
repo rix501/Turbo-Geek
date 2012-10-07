@@ -18,8 +18,9 @@ rssParser = (body, comic = null) ->
     articleCount = 0
     inItem = false
     currentChars = ''
+    buildDate = null
    
-    addContent = (chars) -> if inItem then currentChars += chars
+    addContent = (chars) -> currentChars += chars
 
     parser.onerror = (e) -> sys.puts '<error>' + JSON.stringify(e) + '</error>'
         
@@ -28,7 +29,6 @@ rssParser = (body, comic = null) ->
     parser.oncdata = (text) -> addContent text
         
     parser.onopentag = (node) ->
-        # opened a tag.  node has "name" and "attributes"
         currentElement = node.name.toLowerCase()
         if currentElement is 'item' or currentElement is 'entry'
             inItem = true
@@ -48,12 +48,18 @@ rssParser = (body, comic = null) ->
                 when 'pubdate'
                     articles[articleCount][currentElement] = moment currentChars.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
                         
-            currentElement = false
-            currentChars = ''
-
             if name.toLowerCase() is 'item' or name.toString() is 'entry'
                 inItem = false
+                if not articles[articleCount]['pubdate'] and buildDate? then articles[articleCount]['pubdate'] = buildDate
                 articleCount++
+        else 
+            switch currentElement
+                when 'lastbuilddate' 
+                    buildDate = moment currentChars.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
+
+        currentElement = false
+        currentChars = ''
+
 
     parser.onattribute = (attr) -> # an attribute.  attr has "name" and "value"
     

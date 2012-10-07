@@ -5,4 +5,15 @@ define (require) ->
 
     class Comics extends Backbone.Collection
         model: Comic
-        url: 'http://localhost:5000/comics'
+
+        url: '/comics'
+
+        comparator: (model) ->
+        	model.get 'name'
+
+        getNewComics: ->
+        	now = moment()
+
+        	@filter (model) ->
+    	        now.format('YYYY-MM-DD') is model.get('lastUpdated').format('YYYY-MM-DD')
+

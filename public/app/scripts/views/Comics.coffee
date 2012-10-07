@@ -13,9 +13,6 @@ define (require) ->
         initialize: ->
             @collection = new Comics()
             @collection.bind 'reset', @addAll, @
-            @collection.bind 'change:IsMine', (model, IsMine) ->
-                if IsMine then @add model, 'my-comics' else @$('.my-comics .comic-' + model.id).remove()
-            , @
 
             @collection.fetch()
 
@@ -26,10 +23,9 @@ define (require) ->
             @$('ul.' + group).append el 
 
         addAll: (collection) ->
-            myComics = collection.filter (model) ->
-                model.get 'IsMine'
+            newComics = collection.getNewComics()
 
-            _.each myComics, (model) => @add model, 'my-comics'
+            _.each newComics, (model) => @add model, 'new-comics'
 
             collection.each (model) =>  @add model, 'comics'
 

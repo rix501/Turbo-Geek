@@ -11,7 +11,7 @@ define (require) ->
             'click a.subscribe' : 'subscribe'
             'click a.unsubscribe' : 'unsubscribe'
         tagName: 'li'
-        className: 'comic'
+        className: 'comic well'
         initialize: ->
             @model.bind 'change:IsMine', @render, @
 
