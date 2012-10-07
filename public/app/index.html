@@ -11,64 +11,6 @@
         <meta name="viewport" content="width=device-width">
         
         <link rel="stylesheet" href="styles/main.css">
-        <script type="text/template" id="page-template">
-            <div class="navbar navbar-inverse navbar-fixed-top">
-                <div class="navbar-inner">
-                    <div class="container">
-                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </a>
-                        <a class="brand" href="#">Turbo Geek</a>
-                        <div class="nav-collapse collapse">
-                            <ul class="nav">
-                                <li class="active"><a href="#">Home</a></li>
-                                <li><a href="#about">About</a></li>
-                            </ul>
-                            <!-- <form class="navbar-form pull-right">
-                                <input class="span2" type="text" placeholder="Email">
-                                <input class="span2" type="password" placeholder="Password">
-                                <button type="submit" class="btn">Sign in</button>
-                            </form> -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container">
-                <section class="content"></section>
-                <hr />
-                <footer>
-                    <p>&copy; Company 2012</p>
-                </footer>
-            </div>
-        </script>
-        <script type="text/template" id="comics-template">
-            <div class="page-header">
-                <h2>My Comics</h1>
-            </div>
-            <ul class="my-comics"></ul>
-            <div class="page-header">
-                <h2>All Comics</h1>
-            </div>
-            <ul class="comics"></ul>
-        </script>
-        <script type="text/template" id="comic-template">
-            {{name}}<ul>
-                <li>
-                    {{#IsMine}}
-                        <a class="unsubscribe" href="#">Unsubscribe</a>
-                    {{/IsMine}}
-                    {{^IsMine}}
-                        <a class="subscribe" href="#">Subscribe</a>
-                    {{/IsMine}}
-                </li>
-                <li><a href="{{site}}">Site</a></li>
-                <li><a href="{{feed}}">Feed</a></li>
-                <li>Last Updated: {{lastUpdated}}</a></li>
-            </ul>
-        </script>
     </head>
     <body>
 

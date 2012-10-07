@@ -1,12 +1,15 @@
-define [
-    'models/Comics',
-    'views/Comic',
-    'mustache',
-    'backbone'
-],
-(Comics, ComicView, Mustache) ->
-    Backbone.View.extend
-        template: Mustache.compile $("#comics-template").html()
+define (require) ->
+
+    Mustache = require 'mustache'
+    Backbone = require 'backbone'
+
+    Comics = require 'models/Comics'
+    ComicView = require 'views/Comic'
+
+    COMICS_TEMPLATE = require 'text!tmpl/comics.mustache'
+
+    class ComicsView extends Backbone.View
+        template: Mustache.compile COMICS_TEMPLATE
         initialize: ->
             @collection = new Comics()
             @collection.bind 'reset', @addAll, @
@@ -17,8 +20,7 @@ define [
             @collection.fetch()
 
         add: (model, group) ->
-            comicView = new ComicView
-                model: model
+            comicView = new ComicView model: model
 
             el = comicView.render().el
             @$('ul.' + group).append el 
@@ -27,11 +29,9 @@ define [
             myComics = collection.filter (model) ->
                 model.get 'IsMine'
 
-            _.each myComics, (model) =>
-                @add model, 'my-comics'
+            _.each myComics, (model) => @add model, 'my-comics'
 
-            collection.each (model) => 
-                @add model, 'comics'
+            collection.each (model) =>  @add model, 'comics'
 
         render: ->
             @$el.html(@template())

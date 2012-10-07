@@ -4,6 +4,7 @@
 ehthumbs.db
 Icon?
 Thumbs.db
+.nodemonignore
 
 # Node modules that can't be synced to no.de #
 ##############################################

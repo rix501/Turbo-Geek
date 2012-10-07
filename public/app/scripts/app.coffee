@@ -1,13 +1,14 @@
-define [
-    'views/Page',
-    'views/Comics',
-    'jquery',
-    'underscore',
-    'backbone',
-    'bootstrap'
-],
-(PageView, ComicsView) ->
-    Backbone.Router.extend 
+define (require) ->
+    
+    $ = require 'jquery'
+    _ = require 'underscore'
+    Backbone = require 'backbone'
+    bootstrap = require 'bootstrap'
+
+    PageView = require 'views/Page'
+    ComicsView = require 'views/Comics'
+
+    class TurboGeek extends Backbone.Router
         routes: 
             '' : 'index'
         initialize: ->

@@ -1,10 +1,11 @@
-define [
-    'mustache',
-    'backbone'
-],
-(Mustache) ->
-    Backbone.View.extend
-        template: Mustache.compile($("#page-template").html())
+define (require) ->
+    Mustache = require 'mustache'
+    Backbone = require 'backbone'
+
+    PAGE_TEMPLATE = require 'text!tmpl/page.mustache'
+
+    class PageView extends Backbone.View
+        template: Mustache.compile PAGE_TEMPLATE
         el: 'body'
         initialize: ->
             _.bindAll @, 'render'

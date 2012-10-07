@@ -1,8 +1,13 @@
-define [
-    'backbone'
-],
-->
-    Backbone.Model.extend
+define (require) ->
+    
+    Backbone = require 'backbone'
+    moment = require 'moment'
+
+    class Comic extends Backbone.Model
+        initialize: ->
+            @set lastUpdated: moment @get('lastUpdated')
+            @set lastUpdatedFormated: @get('lastUpdated').fromNow()
+
         subscribe: ->
             req = $.ajax
                 url: 'http://localhost:5000/subscribe/' + @id

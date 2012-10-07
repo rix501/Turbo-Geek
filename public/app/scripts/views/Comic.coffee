@@ -1,10 +1,12 @@
-define [
-    'mustache',
-    'backbone'
-],
-(Mustache) ->
-    Backbone.View.extend
-        template: Mustache.compile $("#comic-template").html()
+define (require) ->
+
+    Mustache = require 'mustache'
+    Backbone = require 'backbone'
+
+    COMIC_TEMPLATE = require 'text!tmpl/comic.mustache'
+
+    class ComicView extends Backbone.View
+        template: Mustache.compile COMIC_TEMPLATE
         events: 
             'click a.subscribe' : 'subscribe'
             'click a.unsubscribe' : 'unsubscribe'
