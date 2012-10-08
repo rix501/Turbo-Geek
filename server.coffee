@@ -4,6 +4,8 @@ mysql = require 'mysql'
 _ = require('underscore')._
 torpedo = require './torpedo'
 
+config = require './config'
+
 # Express Configuration
 app.configure 'development', ->
     app.use (req,res,next) ->
@@ -25,11 +27,7 @@ app.configure ->
 
 #Routes
 app.get '/comics', (req,res) ->
-    connection = mysql.createConnection
-        host     : 'localhost'
-        user     : 'root'
-        password : ''
-        database : 'Turbo'
+    connection = mysql.createConnection config.mysql
     
     connection.query 'SELECT * FROM all_comics', (err, rows, fields) ->
         if err then throw err
@@ -70,6 +68,6 @@ app.get '/fire', (req, res) ->
 #     })
 # })
 
-
+console.log 
 app.listen process.env.C9_PORT || process.env.PORT || 5000
 console.log 'Express server listening on port %d', process.env.C9_PORT || process.env.PORT || 5000

@@ -1,13 +1,10 @@
 rss = require './rss'
 _ = require('underscore')._
 mysql = require 'mysql'
+config = require './config'
 
 updatePubDate = (comic, date, cb) ->
-    connection = mysql.createConnection
-        host     : 'localhost'
-        user     : 'root'
-        password : ''
-        database : 'Turbo'
+    connection = mysql.createConnection config.mysql
 
     connection.query 'CALL Update_Date(? , ?)', [comic.id, date.format('YYYY-MM-DD HH:MM:SS')], (err, rows, fields) =>
             if err then throw err
@@ -15,11 +12,7 @@ updatePubDate = (comic, date, cb) ->
             cb?()
 
 exports.fire = (cb) ->
-    connection = mysql.createConnection
-        host     : 'localhost'
-        user     : 'root'
-        password : ''
-        database : 'Turbo'
+    connection = mysql.createConnection config.mysql
     
     connection.query 'SELECT * FROM all_comics', (err, comics, fields) =>
         if err then throw err
