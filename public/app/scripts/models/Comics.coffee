@@ -16,4 +16,3 @@ define (require) ->
 
         	@filter (model) ->
     	        now.format('YYYY-MM-DD') is model.get('lastUpdated').format('YYYY-MM-DD')
-

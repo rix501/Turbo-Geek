@@ -16,7 +16,6 @@ require.config
             exports: 'Backbone'
         'bootstrap' : ['jquery']
 
-
 define (require) ->
     $ = require 'jquery'
     Backbone = require 'backbone'
