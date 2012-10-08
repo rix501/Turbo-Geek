@@ -5,6 +5,7 @@
 ###############
 temp/
 test/
+dist/
 .sass-cache/
 
 # Config #

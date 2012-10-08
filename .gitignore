@@ -6,13 +6,9 @@ Icon?
 Thumbs.db
 .nodemonignore
 
-# Node modules that can't be synced to no.de #
+# Node modules #
 ##############################################
 node_modules/
-
-# Yeoman #
-##########
-old-public/
 
 # Project files #
 #################
@@ -25,3 +21,7 @@ old-public/
 # Logs #
 ########
 *.log
+
+# Config #
+##########
+config.json
