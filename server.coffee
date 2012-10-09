@@ -31,7 +31,8 @@ app.get '/comics', (req,res) ->
     mysql.acquire (err, connection) ->
         connection.query 'SELECT * FROM all_comics', (err, rows, fields) ->
             if err then throw err
-                
+            
+            connection.end()
             res.send rows
 
 app.get '/fire', (req, res) ->

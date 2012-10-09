@@ -9,6 +9,7 @@ updatePubDate = (comic, date, cb) ->
         connection.query 'CALL Update_Date(? , ?)', [comic.id, date.format('YYYY-MM-DD HH:MM:SS')], (err, rows, fields) =>
                 if err then throw err
 
+                connection.end()
                 cb?()
 
 exports.fire = (cb) ->
@@ -22,3 +23,5 @@ exports.fire = (cb) ->
                 rss.parseComic comic, (parsedComic, articles) ->
                     updatePubDate(parsedComic, articles[0].pubdate) if articles[0]?
                     end()
+
+            connection.end()
