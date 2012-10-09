@@ -6,7 +6,7 @@ if not process.env.NODE_ENV or process.env.NODE_ENV is 'development'
         database : 'Turbo'
 
 else if process.env.NODE_ENV is 'production'
-    mysql = {}
+    mysql = process.env.DATABASE_URL
 
 module.exports = 
     mysql: mysql

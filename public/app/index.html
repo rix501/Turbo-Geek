@@ -9,13 +9,17 @@
         <title>Turbo Geek</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
-        
         <link rel="stylesheet" href="styles/main.css">
     </head>
     <body>
-
     <!-- build:js scripts/amd-app.js -->
     <script data-main="scripts/main" src="scripts/vendor/require.js"></script>
     <!-- endbuild -->
+    <script>
+        var ready = function(){var b=!1;return function(e){var a=function(){if(!b)return b=!0,e()},d=function(){if(!b){try{document.documentElement.doScroll("left")}catch(c){setTimeout(d,1);return}return a()}};if("complete"===document.readyState)return a();if(document.addEventListener)document.addEventListener("DOMContentLoaded",a,!1),window.addEventListener("load",a,!1);else if(document.attachEvent){document.attachEvent("onreadystatechange",a);window.attachEvent("onload",a);var c=!1;try{c=null==window.frameElement}catch(f){}if(document.documentElement.doScroll&&
+    c)return d()}}}();
+        var launch = function() { require(['main'], function(){}) };
+        ready(launch);
+    </script>
 </body>
 </html>
