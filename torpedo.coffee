@@ -9,7 +9,7 @@ updatePubDate = (comic, date, cb) ->
         connection.query 'CALL Update_Date(? , ?)', [comic.id, date.format('YYYY-MM-DD HH:MM:SS')], (err, rows, fields) =>
                 if err then throw err
 
-                connection.end()
+                mysql.release connection
                 cb?()
 
 exports.fire = (cb) ->
@@ -24,4 +24,4 @@ exports.fire = (cb) ->
                     updatePubDate(parsedComic, articles[0].pubdate) if articles[0]?
                     end()
 
-            connection.end()
+            mysql.release connection

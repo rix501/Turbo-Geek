@@ -21,7 +21,6 @@ pool = poolModule.Pool
         connection.on 'error', (err) ->
             if not err.fatal then return
             if err.code isnt 'PROTOCOL_CONNECTION_LOST' then throw err
-            console.log 'Re-connecting lost connection: ' + err.stack
 
         callback(null, connection)
     destroy  : (client) -> client.end() 
