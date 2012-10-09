@@ -1,10 +1,10 @@
 express = require 'express'
 app = express()
-mysql = require 'mysql'
 _ = require('underscore')._
 torpedo = require './torpedo'
 
 config = require './config'
+mysql = config.mysql
 
 # Express Configuration
 app.configure 'development', ->
@@ -27,12 +27,12 @@ app.configure ->
 
 #Routes
 app.get '/comics', (req,res) ->
-    connection = mysql.createConnection config.mysql
-    
-    connection.query 'SELECT * FROM all_comics', (err, rows, fields) ->
-        if err then throw err
-            
-        res.send rows
+
+    mysql.acquire (err, connection) ->
+        connection.query 'SELECT * FROM all_comics', (err, rows, fields) ->
+            if err then throw err
+                
+            res.send rows
 
 app.get '/fire', (req, res) ->
     torpedo.fire (msg) -> res.send msg

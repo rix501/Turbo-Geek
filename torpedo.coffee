@@ -1,25 +1,24 @@
 rss = require './rss'
 _ = require('underscore')._
-mysql = require 'mysql'
+
 config = require './config'
+mysql = config.mysql
 
 updatePubDate = (comic, date, cb) ->
-    connection = mysql.createConnection config.mysql
+    mysql.acquire (err, connection) ->
+        connection.query 'CALL Update_Date(? , ?)', [comic.id, date.format('YYYY-MM-DD HH:MM:SS')], (err, rows, fields) =>
+                if err then throw err
 
-    connection.query 'CALL Update_Date(? , ?)', [comic.id, date.format('YYYY-MM-DD HH:MM:SS')], (err, rows, fields) =>
-            if err then throw err
-
-            cb?()
+                cb?()
 
 exports.fire = (cb) ->
-    connection = mysql.createConnection config.mysql
-    
-    connection.query 'SELECT * FROM all_comics', (err, comics, fields) =>
-        if err then throw err
+    mysql.acquire (err, connection) -> 
+        connection.query 'SELECT * FROM all_comics', (err, comics, fields) =>
+            if err then throw err
 
-        end = _.after comics.length, -> cb msg: 'OK'
+            end = _.after comics.length, -> cb msg: 'OK'
 
-        comics.forEach (comic) ->
-            rss.parseComic comic, (parsedComic, articles) ->
-                updatePubDate(parsedComic, articles[0].pubdate) if articles[0]?
-                end()
+            comics.forEach (comic) ->
+                rss.parseComic comic, (parsedComic, articles) ->
+                    updatePubDate(parsedComic, articles[0].pubdate) if articles[0]?
+                    end()
