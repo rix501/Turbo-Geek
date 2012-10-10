@@ -7,14 +7,15 @@
 // --------------------------------------------------
 
 
+
 // Grays
 // -------------------------
 $black:                 #000 !default;
-$grayDarker:            #222 !default;
-$grayDark:              #333 !default;
+$grayDarker:            #4d4d4d !default;
+$grayDark:              #424242 !default;
 $gray:                  #555 !default;
-$grayLight:             #999 !default;
-$grayLighter:           #eee !default;
+$grayLight:             #bcbcbc !default;
+$grayLighter:           #e9e9e9 !default;
 $white:                 #fff !default;
 
 
@@ -29,6 +30,14 @@ $orange:                #f89406 !default;
 $pink:                  #c3325f !default;
 $purple:                #7a43b6 !default;
 
+//Gamebookers
+
+$orange: #FF9900 !default;
+$darkGrey: #424242 !default;
+$lighterGray: #E9E9E9 !default;
+$lightGray: #BCBCBC !default;
+$blue: #3299BB !default;
+
 
 // Scaffolding
 // -------------------------
@@ -38,8 +47,8 @@ $textColor:             $grayDark !default;
 
 // Links
 // -------------------------
-$linkColor:             #08c !default;
-$linkColorHover:        darken($linkColor, 15%) !default;
+$linkColor:             #3299BB !default;
+$linkColorHover:        #FF9900 !default;
 
 
 // Typography
@@ -149,7 +158,7 @@ $hrBorder:                $grayLighter !default;
 
 // Wells
 // -------------------------
-$wellBackground:                  #f5f5f5 !default;
+$wellBackground:                  $lighterGray;
 
 
 // Navbar
@@ -171,16 +180,16 @@ $navbarLinkBackgroundActive:      darken($navbarBackground, 5.25%) !default;
 $navbarBrandColor:                $navbarLinkColor !default;
 
 // Inverted navbar
-$navbarInverseBackground:                #111111 !default;
-$navbarInverseBackgroundHighlight:       #222222 !default;
-$navbarInverseBorder:                    #252525 !default;
+$navbarInverseBackground:                #424242 !default;
+$navbarInverseBackgroundHighlight:       #424242 !default;
+$navbarInverseBorder:                    #424242 !default;
 
-$navbarInverseText:                      $grayLight !default;
-$navbarInverseLinkColor:                 $grayLight !default;
+$navbarInverseText:                      $grayLighter !default;
+$navbarInverseLinkColor:                 $grayLighter !default;
 $navbarInverseLinkColorHover:            $white !default;
 $navbarInverseLinkColorActive:           $navbarInverseLinkColorHover !default;
 $navbarInverseLinkBackgroundHover:       transparent !default;
-$navbarInverseLinkBackgroundActive:      $navbarInverseBackground !default;
+$navbarInverseLinkBackgroundActive:      #bcbcbc !default;
 
 $navbarInverseSearchBackground:          lighten($navbarInverseBackground, 25%) !default;
 $navbarInverseSearchBackgroundFocus:     $white !default;
