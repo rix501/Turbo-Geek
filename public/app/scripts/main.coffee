@@ -31,7 +31,7 @@ define (require) ->
 
         host = regx.exec(window.location.href)
 
-        if host[1]?
+        if host.length > 1
             host = "http://#{host[1]}:5000"
         else
             host = ''
