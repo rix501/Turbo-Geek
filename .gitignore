@@ -1,0 +1,43 @@
+# OS generated files #
+######################
+.DS_Store
+ehthumbs.db
+Icon?
+Thumbs.db
+.nodemonignore
+
+# Node modules #
+##############################################
+node_modules/
+
+# Project files #
+#################
+*.sublime-project
+*.sublime-workspace
+*.chproj
+*.tmproj
+*.esproj
+deploy
+
+# Logs #
+########
+*.log
+
+
+# Yeoman #
+##########
+
+# Directories #
+###############
+public/dist/
+public/temp/
+public/test/
+public/.sass-cache/
+
+# Config #
+##########
+public/.editorconfig
+public/.gitattributes
+public/.jshintrc
+public/Gruntfile.js
+public/app/.htaccess
