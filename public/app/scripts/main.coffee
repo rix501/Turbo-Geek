@@ -27,8 +27,12 @@ define (require) ->
     webserviceUrl = (path) ->
         return unless path
 
-        if window.location.href.indexOf('localhost') > 0
-            host = 'http://localhost:5000'
+        regx = /^http:\/\/(10\.0\.1\.[0-9]{1,2}|localhost):[0-9]{2,4}.*/
+
+        host = regx.exec(window.location.href)
+
+        if host[1]?
+            host = "http://#{host[1]}:5000"
         else
             host = ''
 

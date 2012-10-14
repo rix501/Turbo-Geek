@@ -8,17 +8,26 @@
     }
 }
 
+ul {
+    margin: 0;
+}
+
 .comic {
     display: inline-block;
     margin: 10px;
-    width: 150px;
-    height: 100px;
+    width: 220px;
+    height: 120px;
     vertical-align: top;
     text-align: center;
+    @include single-box-shadow($grayLighter, 0, 2px, 10px, 1px);
 
-    span {
+    h3 {
+        margin: 0px;
+        padding: 0px;
+        font-size: 20px;
+        line-height: normal;
         display: block;
-        max-height: 40px;
+        max-height: 50px;
         overflow : hidden;
         text-overflow: ellipsis;
     }
@@ -26,5 +35,13 @@
     ul {
         list-style: none;
         margin-left: 0;
+
+        li {
+            font-size: 16px;
+
+            a:hover {
+                text-decoration: none;
+            }
+        }
     }
 }

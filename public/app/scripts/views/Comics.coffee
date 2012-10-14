@@ -1,4 +1,4 @@
-define (require) ->
+define (require, exports) ->
 
     Mustache = require 'mustache'
     Backbone = require 'backbone'
@@ -9,26 +9,42 @@ define (require) ->
     COMICS_TEMPLATE = require 'text!tmpl/comics.mustache'
 
     class ComicsView extends Backbone.View
+        header: 'Comics'
         template: Mustache.compile COMICS_TEMPLATE
         initialize: ->
-            @collection = new Comics()
             @collection.bind 'reset', @addAll, @
-
             @collection.fetch()
 
-        add: (model, group) ->
+        add: (model) ->
             comicView = new ComicView model: model
-
-            el = comicView.render().el
-            @$('ul.' + group).append el 
+            @$('ul.comics').append comicView.render().el 
 
         addAll: (collection) ->
-            newComics = collection.getNewComics()
-
-            _.each newComics, (model) => @add model, 'new-comics'
-
-            collection.each (model) =>  @add model, 'comics'
+            collection.each (model) =>  @add model
 
         render: ->
-            @$el.html(@template())
+            @$el.html(@template(header: @header))
             @
+
+    class NewComicsView extends ComicsView
+        header: 'Today\'s New Comics'
+
+        initialize: ->
+            @collection = new Comics(recent: true)
+            super
+
+        addAll: (collection) ->
+            _.each collection.getNewComics(), (model) => @add model
+
+    class AllComicsView extends ComicsView
+        header: 'All Comics'
+
+        initialize: ->
+            @collection = new Comics()
+            super
+
+    exports.ComicsView = ComicsView
+    exports.NewComicsView = NewComicsView
+    exports.AllComicsView = AllComicsView
+
+    exports

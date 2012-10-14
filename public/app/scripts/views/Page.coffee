@@ -1,6 +1,7 @@
 define (require) ->
     Mustache = require 'mustache'
     Backbone = require 'backbone'
+    Bootstrap = require 'bootstrap'
 
     PAGE_TEMPLATE = require 'text!tmpl/page.mustache'
 
@@ -9,6 +10,11 @@ define (require) ->
         el: 'body'
         initialize: ->
             _.bindAll @, 'render'
+
+        changeNav: (navClass) ->
+            @$('.nav .active').removeClass('active')
+            @$(".nav .#{navClass}").addClass('active')
+
         render: ->
             @$el.html @template() 
 

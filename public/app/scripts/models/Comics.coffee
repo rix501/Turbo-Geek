@@ -1,12 +1,21 @@
-define (require) ->
+define (require, exports) ->
 
     Comic = require 'models/comic'
     Backbone = require 'backbone'
 
     class Comics extends Backbone.Collection
+        initialize: ->
+            _.extend @, @options
+
         model: Comic
 
-        url: '/comics'
+        recent: false
+
+        url: ->
+            if @recent
+                '/comics'
+            else
+                '/comics'
 
         comparator: (model) ->
         	model.get 'name'

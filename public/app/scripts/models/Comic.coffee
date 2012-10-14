@@ -1,4 +1,4 @@
-define (require) ->
+define (require, exports) ->
     
     Backbone = require 'backbone'
     moment = require 'moment'
