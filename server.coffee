@@ -26,7 +26,8 @@ app.configure ->
     app.use express.static __dirname + '/public/dist/'
 
 #Routes
-app.get '/comics', (req,res) ->
+app.get /^\/comics(?:\/(new|all|you))?$/, (req,res) ->
+    if req.params[0]? then type = req.params[0] else type = 'all'
 
     mysql.acquire (err, connection) ->
         connection.query 'SELECT * FROM all_comics', (err, rows, fields) ->
@@ -69,6 +70,5 @@ app.get '/fire', (req, res) ->
 #     })
 # })
 
-console.log 
 app.listen process.env.C9_PORT || process.env.PORT || 5000
 console.log 'Express server listening on port %d', process.env.C9_PORT || process.env.PORT || 5000
