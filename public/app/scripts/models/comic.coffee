@@ -4,6 +4,7 @@ define (require, exports) ->
     moment = require 'moment'
 
     class Comic extends Backbone.Model
+
         initialize: ->
             @set lastUpdated: moment @get('lastUpdated')
             @set lastUpdatedFormated: @get('lastUpdated').fromNow()
@@ -15,7 +16,7 @@ define (require, exports) ->
             
             req.then =>
                 @set
-                    IsMine: true
+                    isMine: true
 
         unsubscribe: ->
             req = $.ajax
@@ -24,4 +25,4 @@ define (require, exports) ->
 
             req.then =>
                 @set
-                    IsMine: false
+                    isMine: false

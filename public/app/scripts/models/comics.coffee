@@ -2,21 +2,22 @@ define (require, exports) ->
 
     Comic = require 'models/comic'
     Backbone = require 'backbone'
+    _ = require 'underscore'
 
     class Comics extends Backbone.Collection
-        initialize: ->
-            _.extend @, @options
-
+       
         model: Comic
 
-        recent: false
+        defaults:
+            type: ''
+
+        initialize: (options) ->
+            _.extend @, options
+            _.defaults @, @defaults
 
         url: ->
-            if @recent
-                '/comics'
-            else
-                '/comics'
-
+            "/comics/#{@type}"
+        
         comparator: (model) ->
         	model.get 'name'
 

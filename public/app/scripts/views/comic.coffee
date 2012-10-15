@@ -7,13 +7,17 @@ define (require) ->
 
     class ComicView extends Backbone.View
         template: Mustache.compile COMIC_TEMPLATE
+
         events: 
             'click a.subscribe' : 'subscribe'
             'click a.unsubscribe' : 'unsubscribe'
+
         tagName: 'li'
+
         className: 'comic well'
+
         initialize: ->
-            @model.bind 'change:IsMine', @render, @
+            @model.on 'change:isMine', @render, @
 
         subscribe: (event) ->
             event.preventDefault()

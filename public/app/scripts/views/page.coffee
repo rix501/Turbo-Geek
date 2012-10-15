@@ -6,16 +6,16 @@ define (require) ->
     PAGE_TEMPLATE = require 'text!tmpl/page.mustache'
 
     class PageView extends Backbone.View
+
         template: Mustache.compile PAGE_TEMPLATE
+
         el: 'body'
-        initialize: ->
-            _.bindAll @, 'render'
 
         changeNav: (navClass) ->
-            @$('.nav .active').removeClass('active')
-            @$(".nav .#{navClass}").addClass('active')
+            @$(".nav .active").removeClass 'active'
+            @$(".nav .#{navClass}").addClass 'active'
 
-        render: ->
+        render: =>
             @$el.html @template() 
 
             @
