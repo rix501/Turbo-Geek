@@ -37,7 +37,7 @@ rssParser = (body, comic = null) ->
     parser.onclosetag = (name) ->
         if inItem
             switch currentElement
-                when 'description', 'summary', 'link', 'title'
+                when 'description', 'summary', 'link', 'title', 'guid'
                     articles[articleCount][currentElement] = currentChars.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
                 
                 when 'content','encoded'
@@ -102,4 +102,4 @@ exports.parseURL = (url, cb) ->
 
 exports.parseComic = (comic, cb) ->
     callback = cb
-    getRss comic.feed, comic
+    getRss comic.get('feed'), comic

@@ -17,7 +17,6 @@ define (require, exports) ->
         initialize: (options) ->
             @comics = new Comics() 
             @comics.on 'reset', @addAll, @
-            @comics.fetch()
 
         add: (model) ->
             comicView = new ComicView model: model
@@ -36,13 +35,18 @@ define (require, exports) ->
         header: 'Today\'s New Comics'
 
         initialize: ->
-            super 
-            #@comics.type = 'recent'
-            #@comics.fetch()
-
+            super
+            @comics.type = 'new'
+            @comics.fetch()
+            
     class AllComicsView extends ComicsView
 
         header: 'All Comics'
+
+        initialize: ->
+            super
+            @comics.type = 'all'
+            @comics.fetch()
 
     exports.ComicsView = ComicsView
     exports.NewComicsView = NewComicsView

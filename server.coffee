@@ -1,10 +1,7 @@
 express = require 'express'
 app = express()
-_ = require('underscore')._
-torpedo = require './torpedo'
 
-config = require './config'
-mysql = config.mysql
+Comics = require './modules/models/comics'
 
 # Express Configuration
 app.configure 'development', ->
@@ -26,27 +23,30 @@ app.configure ->
     app.use express.static __dirname + '/public/dist/'
 
 #Routes
-app.get /^\/comics(?:\/(new|all|you))?$/, (req,res) ->
+app.get /^\/comics\/?(new|all|you)?$/, (req,res) ->
     if req.params[0]? then type = req.params[0] else type = 'all'
 
-    mysql.acquire (err, connection) ->
-        connection.query 'SELECT * FROM all_comics', (err, rows, fields) ->
-            if err then throw err
-            
-            mysql.release connection
-            res.send rows
+    console.log type, req.params
+
+    comics = new Comics
+
+    if type is 'all'
+        comics.getAllComics
+            success: ->
+                res.send comics.toJSON()
+    else if type is 'new'
+        comics.getNewComics
+            success: ->
+                res.send comics.toJSON()
+
+
 
 app.get '/fire', (req, res) ->
-    torpedo.fire (msg) -> res.send msg
+    comics = new Comics
+    comics.updateComics (msg) -> res.send msg
 
 
 # app.post('/subscribe/:id',function(req,res){
-#     var connection = mysql.createConnection({
-#         host     : 'localhost',
-#         user     : 'root',
-#         password : '',
-#         database : 'Turbo'
-#     })
 
 #     connection.query('CALL Subscribe(1 , ?)', [req.params.id], function(err, rows, fields) {
 #         if (err) throw err
@@ -56,12 +56,6 @@ app.get '/fire', (req, res) ->
 # })
 
 # app.delete('/subscribe/:id',function(req,res){
-#     var connection = mysql.createConnection({
-#         host     : 'localhost',
-#         user     : 'root',
-#         password : '',
-#         database : 'Turbo'
-#     })
 
 #     connection.query('CALL Unsubscribe(1 , ?)', [req.params.id], function(err, rows, fields) {
 #         if (err) throw err
