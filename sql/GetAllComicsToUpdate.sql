@@ -9,5 +9,5 @@ SELECT
     c.feed,
     c.last_updated AS lastUpdated
 FROM comics c
-WHERE IFNULL(c.schedule, 127) & GetDayAsBit() > 0
-AND DATE_FORMAT(c.last_updated, '%Y%m%w') <> DATE_FORMAT(DATE(NOW()), '%Y%m%w')
+WHERE IFNULL(c.schedule, 127) & POWER(2, DATE_FORMAT(DATE(NOW()) , '%w')) > 0
+AND DATE_FORMAT(c.last_updated, '%Y%m%d') <> DATE_FORMAT(DATE(NOW()), '%Y%m%d')

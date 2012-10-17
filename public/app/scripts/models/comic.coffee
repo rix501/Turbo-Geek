@@ -6,7 +6,7 @@ define (require, exports) ->
     class Comic extends Backbone.Model
 
         initialize: ->
-            @set lastUpdated: moment @get('lastUpdated')
+            @set lastUpdated: moment.utc @get('lastUpdated')
             @set lastUpdatedFormated: @get('lastUpdated').fromNow()
 
         subscribe: ->

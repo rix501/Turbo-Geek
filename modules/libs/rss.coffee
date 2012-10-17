@@ -8,14 +8,17 @@ sax = require 'sax'
 strict = false # set to false for html-mode
 parser = sax.parser strict
 
+Item = require '../models/item'
+Items = require '../models/items'
+
 # Holds the callback which is passed to the exported function. 
 callback = ->
 comicObj = null
 
 rssParser = (body, comic = null) ->
-    articles = []
+    items = new Items
+    item  = null
     currentElement = false
-    articleCount = 0
     inItem = false
     currentChars = ''
     buildDate = null
@@ -32,30 +35,33 @@ rssParser = (body, comic = null) ->
         currentElement = node.name.toLowerCase()
         if currentElement is 'item' or currentElement is 'entry'
             inItem = true
-            articles[articleCount] = []
+            item = new Item
                 
     parser.onclosetag = (name) ->
         if inItem
             switch currentElement
                 when 'description', 'summary', 'link', 'title', 'guid'
-                    articles[articleCount][currentElement] = currentChars.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
+                    item.set currentElement, currentChars.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
                 
                 when 'content','encoded'
-                    # feedburner is <content:encoded>, node-xml reads as <encoded>
                     currentElement = 'content'
-                    articles[articleCount][currentElement] = currentChars.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
+                    item.set currentElement, currentChars.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
 
                 when 'pubdate'
-                    articles[articleCount][currentElement] = moment currentChars.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
+                    item.set currentElement, moment.utc currentChars.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
                         
             if name.toLowerCase() is 'item' or name.toString() is 'entry'
                 inItem = false
-                if not articles[articleCount]['pubdate'] and buildDate? then articles[articleCount]['pubdate'] = buildDate
-                articleCount++
+                
+                if not item.get('pubdate') and buildDate? 
+                    item.set 'pubdate', buildDate
+
+                items.add item
+
         else 
             switch currentElement
                 when 'lastbuilddate' 
-                    buildDate = moment currentChars.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
+                    items.buildDate = moment currentChars.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
 
         currentElement = false
         currentChars = ''
@@ -63,7 +69,12 @@ rssParser = (body, comic = null) ->
 
     parser.onattribute = (attr) -> # an attribute.  attr has "name" and "value"
     
-    parser.onend = -> if comic? then callback(comic, articles) else callback(articles)
+    parser.onend = -> 
+        if comic? 
+            comic.set 'items', items
+            comic.trigger 'update:date'
+        else 
+            callback(items)
 
     #Start
     parser.write(body).close()
@@ -100,6 +111,5 @@ exports.parseURL = (url, cb) ->
     callback = cb
     getRss url
 
-exports.parseComic = (comic, cb) ->
-    callback = cb
+exports.parseComic = (comic) ->
     getRss comic.get('feed'), comic

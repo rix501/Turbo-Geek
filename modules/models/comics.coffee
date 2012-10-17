@@ -35,8 +35,6 @@ class Comics extends Backbone.Collection
                 
                 mysql.release connection
 
-                console.log rows
-
                 @reset @parse(rows), options
                 options.success @ if options.success   
 
@@ -57,10 +55,9 @@ class Comics extends Backbone.Collection
             success: =>
                 end = _.after @length, -> cb msg: 'OK'
 
-                @each (comic) ->
-                    rss.parseComic comic, (parsedComic, articles) ->
-                        console.log articles
-                        parsedComic.updatePubDate(articles[0].pubdate) if articles[0]?
-                        end()
+                @on 'change:date', end
+
+                @each rss.parseComic 
+
 
 module.exports = Comics
