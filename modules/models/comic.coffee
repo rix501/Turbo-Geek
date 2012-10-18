@@ -4,14 +4,23 @@ Backbone = require 'backbone'
 config = require '../config'
 mysql = config.mysql
 
+Items = require './items'
+
 class Comic extends Backbone.Model
 
     initialize: () ->
         @on 'update:date', @updatePubDate
+        @set 'items', new Items([], comic: @)
 
     subscribe: ->
 
     unsubscribe: ->
+
+    getItems: (cb) ->
+        items = @get('items')
+
+        items.fetch
+            success: cb
 
     updatePubDate: (cb) -> 
         if @get('items').at(0)?

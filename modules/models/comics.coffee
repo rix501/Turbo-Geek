@@ -1,4 +1,3 @@
-rss = require '../libs/rss'
 _ = require('underscore')._
 Backbone = require 'backbone'
 
@@ -7,7 +6,6 @@ mysql = config.mysql
 
 Comic = require './comic'
     
-
 class Comics extends Backbone.Collection
 
     initialize: () ->
@@ -57,7 +55,7 @@ class Comics extends Backbone.Collection
 
                 @on 'change:date', end
 
-                @each rss.parseComic 
+                @each (comic) -> comic.getItems()
 
 
 module.exports = Comics
