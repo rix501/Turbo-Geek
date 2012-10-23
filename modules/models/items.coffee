@@ -35,7 +35,7 @@ class Items extends Backbone.Collection
 
         saxParser.oncdata = (text) -> addContent text
             
-        saxParser.onopentag = (node) ->
+        saxParser.onopentag = (node) =>
             currentElement = node.name.toLowerCase()
             if currentElement is 'item' or currentElement is 'entry'
                 inItem = true
@@ -44,23 +44,28 @@ class Items extends Backbone.Collection
         saxParser.onclosetag = (name) =>
             if inItem
                 switch currentElement
-                    when 'description', 'summary', 'link', 'title', 'guid'
+                    when 'description', 'summary', 'link', 'title'
+                        item.set currentElement, currentChars.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
+
+                    when 'guid', 'id'
+                        currentElement = 'guid'
                         item.set currentElement, currentChars.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
                     
                     when 'content','encoded'
                         currentElement = 'content'
                         item.set currentElement, currentChars.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
 
-                    when 'pubdate'
+                    when 'pubdate', 'updated'
+                        currentElement = 'pubdate'
                         item.set currentElement, moment.utc currentChars.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
                             
-                if name.toLowerCase() is 'item' or name.toString() is 'entry'
+                if name.toLowerCase() is 'item' or name.toLowerCase() is 'entry'
                     inItem = false
                     
                     if not item.get('pubdate') and @buildDate? 
                         item.set 'pubdate', @buildDate
 
-                    @add item
+                    @add item if not item.testForArticle @comic
 
             else 
                 switch currentElement
@@ -73,7 +78,6 @@ class Items extends Backbone.Collection
         saxParser.onattribute = (attr) -> # an attribute.  attr has "name" and "value"
         
         saxParser.onend = =>  
-            console.log @comic.toJSON()
             @comic.trigger 'update:date'
             cb() if cb
 
@@ -91,15 +95,14 @@ class Items extends Backbone.Collection
 
         parts = urlParser.parse @comic.get 'feed'
 
-        # set the default port to 80
         if parts.port? then parts.port = 80
         
         redirectionLevel = 0
         request = http.request
             method: 'GET'
             port: parts.port
-            host: parts.hostname
-            path: parts.pathname
+            host: parts.host
+            path: parts.path
 
         request.addListener 'response', (response) =>        
             switch response.statusCode
@@ -115,7 +118,5 @@ class Items extends Backbone.Collection
                         @fetch url: response.headers.location
 
         request.end()
-
-
 
 module.exports = Items

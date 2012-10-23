@@ -7,5 +7,7 @@ SELECT
     c.name,
     c.site,
     c.feed,
+    c.store,
+    c.last_guid AS lastGuid,
     c.last_updated AS lastUpdated
 FROM comics c

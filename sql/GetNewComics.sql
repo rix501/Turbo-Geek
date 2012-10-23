@@ -7,6 +7,8 @@ SELECT
 	c.name, 
 	c.site, 
 	c.feed, 
+	c.store,
+	c.last_guid AS lastGuid,
 	c.last_updated AS lastUpdated
 FROM comics c
 WHERE DATE_FORMAT(DATE(NOW()), '%Y%m%d') = DATE_FORMAT(c.last_updated, '%Y%m%d')

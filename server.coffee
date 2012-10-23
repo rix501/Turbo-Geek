@@ -1,3 +1,4 @@
+connect = require 'connect'
 express = require 'express'
 app = express()
 
@@ -20,13 +21,12 @@ app.configure ->
     app.use express.bodyParser() 
     app.use express.methodOverride()
     app.use app.router
+    app.use connect.compress() 
     app.use express.static __dirname + '/public/dist/'
 
 #Routes
 app.get /^\/comics\/?(new|all|you)?$/, (req,res) ->
     if req.params[0]? then type = req.params[0] else type = 'all'
-
-    console.log type, req.params
 
     comics = new Comics
 
@@ -63,6 +63,11 @@ app.get '/fire', (req, res) ->
 #         res.send({msg: 'OK'})
 #     })
 # })
+
+# app.get /^\/[^#]([a-z0-9\/]+)[^\.]/i, (req, res, next) ->
+#     console.log req.params[0]
+#     req.url = "\/index.html\/#{req.params[0]}"
+#     next()
 
 app.listen process.env.C9_PORT || process.env.PORT || 5000
 console.log 'Express server listening on port %d', process.env.C9_PORT || process.env.PORT || 5000

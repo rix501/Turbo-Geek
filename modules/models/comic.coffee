@@ -25,9 +25,13 @@ class Comic extends Backbone.Model
     updatePubDate: (cb) -> 
         if @get('items').at(0)?
             date = @get('items').at(0).get 'pubdate' 
+            guid = @get('items').at(0).get('guid') ? @get('items').at(0).get('link')
             @set 'date', date
+
+            return if @get('lastGuid')? and @get('lastGuid') is guid
+
             mysql.acquire (err, connection) =>
-                connection.query 'CALL Update_Date(? , ?)', [@id, date.format('YYYY-MM-DD HH:MM:SS', 'utc')], (err, rows, fields) =>
+                connection.query 'CALL Update_Comic(?, ?, ?)', [@id, date.format('YYYY-MM-DD HH:MM:SS', 'utc'), guid], (err, rows, fields) =>
                         if err then throw err
                         mysql.release connection
         else
