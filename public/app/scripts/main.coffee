@@ -53,4 +53,4 @@ define (require) ->
     
     $ ->
         window.App = new TurboGeek()
-        Backbone.history.start()
+        Backbone.history.start( pushState: true)
