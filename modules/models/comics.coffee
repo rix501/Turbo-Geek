@@ -16,13 +16,24 @@ class Comics extends Backbone.Collection
         options = options or {}
 
         mysql.acquire (err, connection) =>
-            connection.query 'SELECT * FROM all_comics', (err, rows, fields) =>
-                if err then throw err
-                
-                mysql.release connection
+            if @userId?
+                connection.query 'CALL GetAllComics(?)', [@userId], (err, rows, fields) =>
+                    if err then throw err
+                    
+                    mysql.release connection
 
-                @reset @parse(rows), options
-                options.success @ if options.success   
+                    realRows = rows[0]
+
+                    @reset @parse(realRows), options
+                    options.success @ if options.success  
+            else
+                connection.query 'SELECT * FROM all_comics', (err, rows, fields) =>
+                    if err then throw err
+                    
+                    mysql.release connection
+
+                    @reset @parse(rows), options
+                    options.success @ if options.success   
 
     getAllComicsToUpdate: (options) ->
         options = options or {}
@@ -38,15 +49,39 @@ class Comics extends Backbone.Collection
 
     getNewComics: (options) ->
         options = options or {}
+        mysql.acquire (err, connection) =>
+            if @userId?
+                connection.query 'CALL GetNewComics(?)', [@userId], (err, rows, fields) =>
+                    if err then throw err
+                    
+                    mysql.release connection
+
+                    realRows = rows[0]
+
+                    @reset @parse(realRows), options
+                    options.success @ if options.success  
+            else
+                connection.query 'SELECT * FROM new_comics', (err, rows, fields) =>
+                    if err then throw err
+                    
+                    mysql.release connection
+
+                    @reset @parse(rows), options
+                    options.success @ if options.success   
+
+    getUserComics: (options) ->
+        options = options or {}
 
         mysql.acquire (err, connection) =>
-            connection.query 'SELECT * FROM new_comics', (err, rows, fields) =>
+            connection.query 'CALL GetUserComics(?)', [@userId], (err, rows, fields) =>
                 if err then throw err
                 
                 mysql.release connection
 
-                @reset @parse(rows), options
-                options.success @ if options.success   
+                realRows = rows[0]
+
+                @reset @parse(realRows), options
+                options.success @ if options.success  
 
     updateComics: (cb)-> 
         @getAllComicsToUpdate

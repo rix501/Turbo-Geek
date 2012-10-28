@@ -73,13 +73,15 @@ app.post '/login', (req,res) ->
         if auth
             res.send token: syfo("#{user.id}", true)
         else 
-            res.send status: 'error' , 400 
+            res.send 400, status: 'error'
 
 
 app.get /^\/comics\/?(new|all|you)?$/, (req,res) ->
     if req.params[0]? then type = req.params[0] else type = 'all'
 
     comics = new Comics
+
+    comics.userId = syfo(req.query.token) if req.query.token
 
     if type is 'all'
         comics.getAllComics
@@ -89,6 +91,13 @@ app.get /^\/comics\/?(new|all|you)?$/, (req,res) ->
         comics.getNewComics
             success: ->
                 res.send comics.toJSON()
+    else if type is 'you'
+        if comics.userId?
+            comics.getUserComics
+                success: ->
+                    res.send comics.toJSON()
+        else
+            res.send 403, error: 'Need to authenticate'
 
 
 

@@ -1,3 +1,5 @@
+USE Turbo;
+
 DELIMITER //
 
 CREATE TRIGGER unread_trig AFTER UPDATE ON 'comics'

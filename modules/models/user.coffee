@@ -12,10 +12,10 @@ class User extends Backbone.Model
         username = username ? @get 'username'
         mysql.acquire (err, connection) =>
             connection.query 'CALL Get_User(?)', [username], (err, rows, fields) =>
-                    if err then throw err
-                    users = rows[0]
-                    @set users[0]
-                    cb @
-                    mysql.release connection
+                if err then throw err
+                users = rows[0]
+                @set users[0]
+                cb @
+                mysql.release connection
 
 module.exports = User  

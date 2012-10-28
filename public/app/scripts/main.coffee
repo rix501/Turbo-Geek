@@ -20,6 +20,8 @@ define (require) ->
     $ = require 'jquery'
     Backbone = require 'backbone'
 
+    Viewer = require 'models/user'
+
     TurboGeek = require 'app'
 
     sync = Backbone.sync
@@ -55,7 +57,7 @@ define (require) ->
             options.data = model.toJSON()
 
         options.data ?= {}    
-        options.data.token = 'Tyw6fZrrHXymNUyewA2dKA==' if true #user.token
+        options.data.token = Viewer.get('token') if Viewer.isLoggedIn()
 
         sync method, model, options
     
