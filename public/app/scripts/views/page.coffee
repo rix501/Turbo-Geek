@@ -11,9 +11,23 @@ define (require) ->
 
         el: 'body'
 
+        events: 
+            'submit #login-form' : 'login'
+
         changeNav: (navClass) ->
             @$(".nav .active").removeClass 'active'
             @$(".nav .#{navClass}").addClass 'active'
+
+
+        login: (e) ->
+            e.preventDefault()
+            user = new Backbone.Model()
+            user.url = '/login'
+
+            user.save { username: 'rix501', password: 'rix' } ,
+                success: (t, x) -> console.log t, x
+            
+
 
         render: =>
             @$el.html @template() 

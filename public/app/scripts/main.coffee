@@ -24,6 +24,8 @@ define (require) ->
 
     sync = Backbone.sync
 
+    Backbone.emulateJSON = true
+
     webserviceUrl = (path) ->
         return unless path
 
@@ -43,11 +45,17 @@ define (require) ->
         if _.isFunction(object[prop]) then object[prop]() else object[prop]
 
     Backbone.sync = (method, model, options = {}) ->
-        # all model/collection urls get webservice base prefix
         options.url ?= getValue model, 'url'
         options.url = options.url() if _.isFunction(options.url)
 
         options.url = webserviceUrl(options.url)
+
+        if !options.data && model && (method == 'create' || method == 'update')
+            options.data = {}
+            options.data = model.toJSON()
+
+        options.data ?= {}    
+        options.data.token = 'Tyw6fZrrHXymNUyewA2dKA==' if true #user.token
 
         sync method, model, options
     

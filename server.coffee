@@ -1,3 +1,4 @@
+crypto = require 'crypto'
 connect = require 'connect'
 express = require 'express'
 app = express()
@@ -5,7 +6,7 @@ app = express()
 _ = require('underscore')._
 
 Comics = require './modules/models/comics'
-
+User = require './modules/models/user'
 
 rewrite = (req,res,next) ->
     isRoute = no
@@ -18,39 +19,31 @@ rewrite = (req,res,next) ->
 
     next()
 
-checkAuth = (req, res, next) ->
-    if app.settings.env is 'development'
-        req.session.auth = true
-    
-    if req.url is '/login'
-        if req.session and req.session.auth
-            res.redirect '/'
-        else 
-            next()
-        
-        return
-    
-    if req.session and req.session.auth
-        next()
-        return
-    
-    if typeof req.headers['x-requested-with'] isnt 'undefined'
-        res.send error: 'access denied', 403
-    else
-        res.redirect '/login'
+syfo = (token, saif) ->
+    algo = 'aes192'
+    secret = 'g33kturb0'
+    if saif
+        cipher = crypto.createCipher(algo, secret)
+        inputFmt = 'utf8'
+        outFmt = 'base64'
+    else 
+        cipher = crypto.createDecipher(algo, secret)
+        inputFmt = 'base64'
+        outFmt = 'utf8'
+
+    cipher.update(token, inputFmt, outFmt) + cipher.final(outFmt)
 
 
 checkUser = (username, password, cb) ->
-    auth = false
-    
-    users.forEach (user) ->
-        if username is user.username and password is user.password
+    user = new User 
+    user.getUser username, => 
+
+        if user.id? and username is user.get('username') and password is user.get('password')
             auth = true
             cb auth, user
-
-    if not !auth then cb auth
-
-staticMiddleware = express.static "#{__dirname}/public/dist"
+        else 
+            auth = false
+            cb auth
 
 # Express Configuration
 app.configure 'development', ->
@@ -71,17 +64,16 @@ app.configure ->
     app.use app.router
     app.use connect.compress() 
     app.use rewrite
-    app.use staticMiddleware
+    app.use express.static "#{__dirname}/public/dist"
 
 #Routes
 
 app.post '/login', (req,res) ->
     checkUser req.body.username, req.body.password, (auth, user) ->
         if auth
-            req.session.auth = true;
-            res.send({status: 'ok'});
+            res.send token: syfo("#{user.id}", true)
         else 
-            res.send({status: 'ok'}, 400);
+            res.send status: 'error' , 400 
 
 
 app.get /^\/comics\/?(new|all|you)?$/, (req,res) ->
