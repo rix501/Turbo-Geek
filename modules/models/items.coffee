@@ -110,12 +110,21 @@ class Items extends Backbone.Collection
                     body = ''
                     response.addListener 'data', (chunk) -> body += chunk
                     response.addListener 'end', => @parser body, options.success
-                # redirect status returned
                 when 301, 302
+                    redirectionLevel++
+                    sys.puts redirectionLevel
                     if redirectionLevel > 10 then sys.puts 'too many redirects'
                     else 
                         sys.puts 'redirect to ' + response.headers.location
                         @fetch url: response.headers.location
+                else
+                    sys.puts 'error fetching'
+                    @parser '', options.success
+
+        request.setTimeout 10000, =>
+            sys.puts 'timeout'
+            @parser '', options.success
+
 
         request.end()
 
