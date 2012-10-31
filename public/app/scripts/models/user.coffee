@@ -14,6 +14,7 @@ define (require, exports) ->
         isLoggedIn: ->
             !!@get('token')
 
+        url: '/user'
 
         login: (username, password) ->
             url = @url
@@ -29,7 +30,6 @@ define (require, exports) ->
                 @trigger 'logout' 
                 store.remove 'viewer'
             @clear()
-
 
         subscribe: ->
             req = $.ajax

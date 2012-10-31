@@ -1,5 +1,6 @@
 define (require) ->
     Mustache = require 'mustache'
+    _ = require 'underscore'
     Backbone = require 'backbone'
     Bootstrap = require 'bootstrap'
 
@@ -15,11 +16,15 @@ define (require) ->
         events: 
             'hidden' : 'remove'
 
+        initialize: (options) ->
+            _.extend @, options
+
         hide: ->
            @$el.modal 'hide'
 
         remove: ->
            @$el.remove()
+           @close() if @close
 
         render: =>
             @$el.html this.template

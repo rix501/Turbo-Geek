@@ -33,11 +33,16 @@ syfo = (token, saif) ->
 
     cipher.update(token, inputFmt, outFmt) + cipher.final(outFmt)
 
+passwordEconder = (password) ->
+    pSyfo = crypto.createHash 'md5'
+    pSyfo.update(password, 'utf8')
+    pSyfo.digest('base64')
 
 checkUser = (username, password, cb) ->
     user = new User 
-    user.getUser username, => 
+    user.set 'username', username
 
+    user.getUser => 
         if user.id? and username is user.get('username') and password is user.get('password')
             auth = true
             cb auth, user
@@ -69,11 +74,29 @@ app.configure ->
 #Routes
 
 app.post '/login', (req,res) ->
-    checkUser req.body.username, req.body.password, (auth, user) ->
+    checkUser req.body.username, passwordEconder(req.body.password), (auth, user) ->
         if auth
             res.send token: syfo("#{user.id}", true)
         else 
-            res.send 400, status: 'error'
+            res.send 500, status: 'error'
+
+app.post '/user', (req,res) ->
+    user = new User
+
+    password = if req.body.password is '' then null 
+    else    
+        passwordEconder(req.body.password)
+
+    user.set
+        username: req.body.username
+        password: password
+
+    user.createUser (status) =>
+        if status.created
+            user.set 'token', syfo("#{user.id}", true)
+            res.send user.toJSON()
+        else 
+            res.send 500, status: status.message
 
 
 app.get /^\/comics\/?(new|all|you)?$/, (req,res) ->

@@ -38,7 +38,10 @@ define (require) ->
         signup: (e) ->
             e.preventDefault()
             modal = new SignupModal
+                close: =>
+                    @render() if Viewer.isLoggedIn()
             modal.render()
+
 
         render: =>
             viewer = Viewer.toJSON() if Viewer.isLoggedIn()

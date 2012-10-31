@@ -13,8 +13,22 @@ define (require) ->
         template: Mustache.compile MODAL_TEMPLATE
 
         events: _.extend
-            'click .submit': 'render'
+            'submit form': 'signup'
         , Modal::events
+
+        signup: (e) ->
+            e.stopPropagation()
+            e.preventDefault()
+
+            Viewer.save
+                username: @$('form input[name="username"]').val()
+                password: @$('form input[name="password"]').val()
+            , 
+                wait: true
+                success: (model) =>
+                    Viewer.trigger 'create'
+                    @hide()
+                error: (model, resp) =>
 
         render: =>
             @$el.html this.template
