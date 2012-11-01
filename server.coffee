@@ -8,17 +8,6 @@ _ = require('underscore')._
 Comics = require './modules/models/comics'
 User = require './modules/models/user'
 
-rewrite = (req,res,next) ->
-    isRoute = no
-    routes = _.chain(value for own key, value of app.routes).union().flatten().value()
-    isRoute = _.find routes, (route) -> route.regexp.test req.url
-
-    unless isRoute
-        match = /^\/([a-z0-9\/]+)(?![^\.]{1}[^a-z0-9]+)$/i.exec req.url 
-        req.url = "/index.html##{match[1]}" if match?
-
-    next()
-
 syfo = (token, saif) ->
     algo = 'aes192'
     secret = 'g33kturb0'
@@ -38,9 +27,21 @@ passwordEconder = (password) ->
     pSyfo.update(password, 'utf8')
     pSyfo.digest('base64')
 
+rewrite = (req,res,next) ->
+    match = /^\/([a-z0-9\/]+)(?![^\.]{1}[^a-z0-9]+)$/i.exec req.url 
+
+    if match?
+        isRoute = no
+        routes = _.chain(value for own key, value of app.routes).union().flatten().value()
+        isRoute = _.find routes, (route) -> route.regexp.test req.url
+
+        req.url = "/index.html##{match[1]}" unless isRoute
+
+    next()
+
 checkUser = (username, password, cb) ->
     user = new User 
-    user.set 'username', username
+        username: username
 
     user.getUser => 
         if user.id? and username is user.get('username') and password is user.get('password')
@@ -49,6 +50,13 @@ checkUser = (username, password, cb) ->
         else 
             auth = false
             cb auth
+
+checkAuth = (req,res,next) ->
+    if not req.query.token?
+        res.send 403, error: 'Need to authenticate'
+        return
+    else
+        next()
 
 # Express Configuration
 app.configure 'development', ->
@@ -71,24 +79,22 @@ app.configure ->
     app.use rewrite
     app.use express.static "#{__dirname}/public/dist"
 
-#Routes
+# Routes
 
 app.post '/login', (req,res) ->
-    checkUser req.body.username, passwordEconder(req.body.password), (auth, user) ->
+    checkUser req.body.username.toLowerCase(), passwordEconder(req.body.password), (auth, user) ->
         if auth
             res.send token: syfo("#{user.id}", true)
         else 
             res.send 500, status: 'error'
 
 app.post '/user', (req,res) ->
-    user = new User
-
     password = if req.body.password is '' then null 
     else    
         passwordEconder(req.body.password)
 
-    user.set
-        username: req.body.username
+    user = new User
+        username: req.body.username.toLowerCase()
         password: password
 
     user.createUser (status) =>
@@ -97,7 +103,6 @@ app.post '/user', (req,res) ->
             res.send user.toJSON()
         else 
             res.send 500, status: status.message
-
 
 app.get /^\/comics\/?(new|all|you)?$/, (req,res) ->
     if req.params[0]? then type = req.params[0] else type = 'all'
@@ -122,32 +127,39 @@ app.get /^\/comics\/?(new|all|you)?$/, (req,res) ->
         else
             res.send 403, error: 'Need to authenticate'
 
+app.put '/comic/:id/read', checkAuth, (req,res) ->
+    user = new User 
+        id: syfo(req.query.token)
 
+    user.markComicRead req.params.id, (status) =>
+        if status.created
+            res.send status: 'ok'
+        else 
+            res.send 500, status: status.message
+
+app.post '/comic/:id/subscribe', checkAuth, (req,res) ->
+    user = new User 
+        id: syfo(req.query.token)
+
+    user.subscribe req.params.id, (status) =>
+        if status.created
+            res.send status: 'ok'
+        else 
+            res.send 500, status: status.message
+
+app.delete '/comic/:id/subscribe', checkAuth, (req,res) ->
+    user = new User 
+        id: syfo(req.query.token)
+
+    user.unsubscribe req.params.id, (status) =>
+        if status.created
+            res.send status: 'ok'
+        else 
+            res.send 500, status: status.message
 
 app.get '/fire', (req, res) ->
     comics = new Comics
     comics.updateComics (msg) -> res.send msg
-
-
-
-# app.post('/subscribe/:id',function(req,res){
-
-#     connection.query('CALL Subscribe(1 , ?)', [req.params.id], function(err, rows, fields) {
-#         if (err) throw err
-
-#         res.send({msg: 'OK'})
-#     })
-# })
-
-# app.delete('/subscribe/:id',function(req,res){
-
-#     connection.query('CALL Unsubscribe(1 , ?)', [req.params.id], function(err, rows, fields) {
-#         if (err) throw err
-
-#         res.send({msg: 'OK'})
-#     })
-# })
-
 
 app.listen process.env.C9_PORT || process.env.PORT || 5000
 console.log 'Express server listening on port %d', process.env.C9_PORT || process.env.PORT || 5000

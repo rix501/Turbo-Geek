@@ -14,5 +14,10 @@ BEGIN
             last_updated = p_pubDate,
             last_guid = p_guid
         WHERE id = p_comicID;
+
+        UPDATE subscriptions 
+        SET 
+        	read_latest_comic = 0
+        WHERE comicID = p_comicID;
     COMMIT;
 END//

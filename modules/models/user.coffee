@@ -24,7 +24,6 @@ class User extends Backbone.Model
         mysql.acquire (err, connection) =>
             connection.query 'CALL CreateUser(?, ?)', [username, password], (err, result, fields) =>
                 if err then throw err
-                console.log err, result, fields
 
                 if _.isArray(result) and result[0][0].error
                     status =
@@ -38,5 +37,59 @@ class User extends Backbone.Model
 
                 cb status, @ if cb and _.isFunction cb
                 mysql.release connection
+
+    markComicRead: (comicId, cb) -> 
+        return if not @id? and not comicId?
+        mysql.acquire (err, connection) =>
+            connection.query 'CALL Mark_Subscription_Read(? , ?)', [@id, comicId], (err, result, fields) =>
+                if err then throw err
+
+                if _.isArray(result) and result[0][0].error
+                   status =
+                       created: no
+                       message: result[0][0].error
+                else
+                   status =
+                       created: yes
+                       message: 'ok'
+
+                cb status, @ if cb and _.isFunction cb
+                mysql.release connection
+
+    subscribe: (comicId, cb) -> 
+        return if not @id? and not comicId?
+        mysql.acquire (err, connection) =>
+            connection.query 'CALL Subscribe(? , ?)', [@id, comicId], (err, result, fields) =>
+                if err then throw err
+
+                if _.isArray(result) and result[0][0].error
+                   status =
+                       created: no
+                       message: result[0][0].error
+                else
+                   status =
+                       created: yes
+                       message: 'ok'
+
+                cb status, @ if cb and _.isFunction cb
+                mysql.release connection
+
+    unsubscribe: (comicId, cb) ->
+        return if not @id? and not comicId?
+        mysql.acquire (err, connection) =>
+            connection.query 'CALL Unsubscribe(? , ?)', [@id, comicId], (err, result, fields) =>
+                if err then throw err
+
+                if _.isArray(result) and result[0][0].error
+                   status =
+                       created: no
+                       message: result[0][0].error
+                else
+                   status =
+                       created: yes
+                       message: 'ok'
+
+                   cb status, @ if cb and _.isFunction cb
+                   mysql.release connection
 
 module.exports = User  
