@@ -6,12 +6,29 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
-            <a class="brand" href="/">Turbo Geek</a>
+            <a class="brand" href="/">TurboGeek</a>
             <div class="nav-collapse collapse">
                 <ul class="nav">
-                    <li class="new active"><a href="/new">Today</a></li>
-                    <li class="all"><a href="/all">All</a></li>
-                    {{#viewer}}<li class="profile" ><a href="/profile">Yours</a></li>{{/viewer}}                
+                    <li class="new active">
+                        <a href="/new">
+                            <span class="icon">&#128197;</span> 
+                            <span class="text">Today</span> 
+                        </a>
+                    </li>
+                    <li class="all">
+                        <a href="/all">
+                            <span class="icon">&#128214;</span> 
+                            <span class="text">All</span> 
+                        </a>
+                    </li>
+                    {{#viewer}}
+                    <li class="profile" >
+                        <a href="/profile">
+                            <span class="icon">&#128209;</span> 
+                            <span class="text">Yours</span> 
+                        </a>
+                    </li>
+                    {{/viewer}}                
                 </ul>
                 {{^viewer}}
                 <ul class="nav pull-right">

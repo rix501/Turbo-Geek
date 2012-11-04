@@ -165,7 +165,7 @@ $wellBackground:                  $lighterGray;
 // -------------------------
 $navbarCollapseWidth:             979px !default;
 
-$navbarHeight:                    40px !default;
+$navbarHeight:                    50px !default;
 $navbarBackgroundHighlight:       #ffffff !default;
 $navbarBackground:                darken($navbarBackgroundHighlight, 5%) !default;
 $navbarBorder:                    darken($navbarBackground, 12%) !default;
@@ -181,15 +181,15 @@ $navbarBrandColor:                $navbarLinkColor !default;
 
 // Inverted navbar
 $navbarInverseBackground:                #424242 !default;
-$navbarInverseBackgroundHighlight:       #424242 !default;
-$navbarInverseBorder:                    #424242 !default;
+$navbarInverseBackgroundHighlight:       lighten($navbarInverseBackground, 10%) !default;
+$navbarInverseBorder:                    darken($navbarInverseBackground, 50.25%) !default;
 
 $navbarInverseText:                      $grayLighter !default;
-$navbarInverseLinkColor:                 $grayLighter !default;
+$navbarInverseLinkColor:                 $orange !default;
 $navbarInverseLinkColorHover:            $white !default;
 $navbarInverseLinkColorActive:           $navbarInverseLinkColorHover !default;
 $navbarInverseLinkBackgroundHover:       transparent !default;
-$navbarInverseLinkBackgroundActive:      #bcbcbc !default;
+$navbarInverseLinkBackgroundActive:      darken($grayLighter, 25.25%) !default;
 
 $navbarInverseSearchBackground:          lighten($navbarInverseBackground, 25%) !default;
 $navbarInverseSearchBackgroundFocus:     $white !default;

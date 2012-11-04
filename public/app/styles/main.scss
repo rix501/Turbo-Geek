@@ -1,11 +1,57 @@
 @import "compass_twitter_bootstrap";
 @import "compass_twitter_bootstrap_responsive";
 
+@import url(http://fonts.googleapis.com/css?family=Quicksand);
+
+@font-face {
+    font-family: entypo;
+    src: url(../images/Entypo.otf);
+}
+
 @media (min-width: 980px) {
     body {
         padding-top: 60px;
         padding-bottom: 40px;
     }
+}
+
+.brand {
+    font-family: 'Quicksand', sans-serif;
+}
+
+.nav {
+    > li {
+        border-bottom: 0;
+        width: 100px;
+        text-align: center;
+
+        &.active {
+            border-bottom: 2px solid darken($navbarInverseLinkBackgroundActive, 20%);
+        }
+
+        &:hover {
+            border-bottom: 2px solid $orange;
+        }
+    }
+
+    a {
+        height: 18px;
+        span {
+            &.icon {
+                font-family: entypo, Helvetica, Arial, sans-serif;
+                font-size: 40px;
+            }
+
+            &.text {
+                position: relative;
+                top: -5px;
+            }
+        }
+    }
+}
+
+h1 {
+    font-family: 'Quicksand', sans-serif;
 }
 
 ul {
@@ -14,11 +60,13 @@ ul {
 
 .comic {
     display: inline-block;
-    margin: 10px;
-    width: 220px;
-    height: 120px;
+    // margin: 10px;
+    padding: 14px 2px;
+    // width: 220px;
+    height: 140px;
     vertical-align: top;
     text-align: center;
+    background-color: lighten($lighterGray, 5%);
     @include single-box-shadow($grayLighter, 0, 2px, 10px, 1px);
 
     h3 {
@@ -27,14 +75,14 @@ ul {
         font-size: 20px;
         line-height: normal;
         display: block;
-        max-height: 50px;
+        max-height: 30px;
         overflow : hidden;
         text-overflow: ellipsis;
     }
 
     ul {
         list-style: none;
-        margin-left: 0;
+        margin: 10px 0;
 
         li {
             font-size: 16px;
@@ -43,5 +91,13 @@ ul {
                 text-decoration: none;
             }
         }
+    }
+
+    .btn {
+        margin-top: 1px; 
+    }
+
+    .btn-group {
+        display: inline-block;
     }
 }
