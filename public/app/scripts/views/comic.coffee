@@ -14,7 +14,7 @@ define (require) ->
 
         tagName: 'li'
 
-        className: 'comic well span3'
+        className: 'comic well'
 
         initialize: ->
             @model.on 'change:isMine', @render, @

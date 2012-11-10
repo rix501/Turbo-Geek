@@ -48,6 +48,20 @@
             }
         }
     }
+
+    &.login {
+        > li {
+            width: auto;
+
+            &.active {
+                border-bottom: none;
+            }
+
+            &:hover {
+                border-bottom: none;
+            }
+        }
+    }
 }
 
 h1 {
@@ -58,13 +72,33 @@ ul {
     margin: 0;
 }
 
+.comics {
+    display: -ms-flex;
+    display: -moz-flex;
+    display: -webkit-flex;
+    display: flex;
+    -ms-flex-direction: row;
+    -ms-flex-wrap: wrap;
+    -moz-flex-flow: row wrap;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+    -ms-flex-pack: center;
+    -moz-justify-content: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+}
+
 .comic {
-    display: inline-block;
-    // margin: 10px;
+    -ms-flex: 0 1 auto;
+    -moz-flex: 0 1 auto;
+    -webkit-flex: 0 1 auto;
+    flex: 0 1 auto;
+    margin: {
+        right: 20px;
+        bottom: 15px;
+    }
     padding: 14px 2px;
-    // width: 220px;
-    height: 140px;
-    vertical-align: top;
+    width: 250px;
     text-align: center;
     background-color: lighten($lighterGray, 5%);
     @include single-box-shadow($grayLighter, 0, 2px, 10px, 1px);
@@ -95,6 +129,10 @@ ul {
 
     .btn {
         margin-top: 1px; 
+
+        &.read {
+            width: 80px;
+        }
     }
 
     .btn-group {
